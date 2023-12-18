@@ -30,31 +30,30 @@
             <div class="col-lg-7 pb-5">
                 <h3 class="font-weight-semi-bold product-name">{{product.name}}</h3>
                 <div class="d-flex mb-3">
-                    <small class="pt-1">(50 Reviews)</small>
                 </div>
-                <h3 class="font-weight-semi-bold mb-4">{{product.price}}</h3>
+                <h3 class="font-weight-semi-bold mb-4">{{product.price}} VND</h3>
                 <p class="mb-4">{{product.description}}</p>
                 <div class="d-flex mb-3">
                     <p class="text-dark font-weight-medium mb-0 mr-3">Sizes:</p>
                     <form>
                         <div class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" class="custom-control-input" id="size-1" name="size">
+                            <input type="radio" class="custom-control-input" id="size-1" name="size" value="XS">
                             <label class="custom-control-label" for="size-1">XS</label>
                         </div>
                         <div class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" class="custom-control-input" id="size-2" name="size">
+                            <input type="radio" class="custom-control-input" id="size-2" name="size" value="S">
                             <label class="custom-control-label" for="size-2">S</label>
                         </div>
                         <div class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" class="custom-control-input" id="size-3" name="size">
+                            <input type="radio" class="custom-control-input" id="size-3" name="size" value="M">
                             <label class="custom-control-label" for="size-3">M</label>
                         </div>
                         <div class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" class="custom-control-input" id="size-4" name="size">
+                            <input type="radio" class="custom-control-input" id="size-4" name="size" value="L">
                             <label class="custom-control-label" for="size-4">L</label>
                         </div>
                         <div class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" class="custom-control-input" id="size-5" name="size">
+                            <input type="radio" class="custom-control-input" id="size-5" name="size" value="XL">
                             <label class="custom-control-label" for="size-5">XL</label>
                         </div>
                     </form>
@@ -91,7 +90,7 @@
             <div class="col">
                 <div class="nav nav-tabs justify-content-center border-secondary mb-4">
                     <a class="nav-item nav-link active" data-toggle="tab" href="#tab-pane-1">Description</a>
-                    <a class="nav-item nav-link" data-toggle="tab" href="#tab-pane-2">Reviews (0)</a>
+                    <a class="nav-item nav-link" data-toggle="tab" href="#tab-pane-2">Reviews</a>
                 </div>
                 <div class="tab-content">
                     <div class="tab-pane fade show active" id="tab-pane-1">
@@ -157,17 +156,15 @@
                     {% for product in products %}
                     <div class="card product-item border-0">
                         <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                            <img class="img-fluid w-100" style="width: 600px" src="{{product.image.url}}" alt="">
+                            <a href="{% url 'product_detail' product.id %}"><img class="img-fluid w-100" style="width: 600px" alt="">
+                                <img class="img-fluid w-100" style="width: 600px" src="{{product.image.url}}" alt="">
+                            </a>
                         </div>
                         <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
                             <h6 class="text-truncate mb-3">{{product.name}}</h6>
                             <div class="d-flex justify-content-center">
-                                    <h6>{{product.price}} VNĐ</h6>
+                                    <h6>{{product.price}} VND</h6>
                             </div>
-                        </div>
-                        <div class="card-footer d-flex justify-content-between bg-light border">
-                            <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>
-                            <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a>
                         </div>
                     </div>
                     {% endfor %}

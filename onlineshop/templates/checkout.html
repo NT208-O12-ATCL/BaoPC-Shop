@@ -1,82 +1,85 @@
-    {% extends 'base.html' %}
-    {% load static %}
-    
-    {% block content %}
+{% extends 'base.html' %}
+{% load static %}
 
-    {% load custom_filters %}
-    <!-- Page Header Start -->
-    <div class="container-fluid bg-secondary mb-5">
-        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
-            <h1 class="font-weight-semi-bold text-uppercase mb-3">Checkout</h1>
-            <div class="d-inline-flex">
-                <p class="m-0"><a href="/index">Home</a></p>
-                <p class="m-0 px-2">-</p>
-                <p class="m-0">Checkout</p>
-            </div>
+{% block content %}
+
+{% load custom_filters %}
+<!-- Page Header Start -->
+<div class="container-fluid bg-secondary mb-5">
+    <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+        <h1 class="font-weight-semi-bold text-uppercase mb-3">Checkout</h1>
+        <div class="d-inline-flex">
+            <p class="m-0"><a href="/index">Home</a></p>
+            <p class="m-0 px-2">-</p>
+            <p class="m-0">Checkout</p>
         </div>
     </div>
-    <!-- Page Header End -->
+</div>
+<!-- Page Header End -->
 
 
-    <!-- Checkout Start -->
-    <div class="container-fluid pt-5">
-        <div class="row px-xl-5">
-            <div class="col-lg-8">
-                <div class="mb-4">
-                    <h4 class="font-weight-semi-bold mb-4">Recipient</h4>
-                    <div class="row">
-                        <div class="col-md-12 form-group">
-                            <label>Name</label>
-                            <input class="form-control" type="text" placeholder="John">
-                        </div>
-                        <div class="col-md-12 form-group">
-                            <label>Phone Number</label>
-                            <input class="form-control" type="text" placeholder="+123 456 789">
-                        </div>
-                        <div class="col-md-12 form-group">
-                            <label>Address</label>
-                            <input class="form-control" type="text" placeholder="123 Street">
-                        </div>
-                        <div class="col-md-12 form-group">
-                            <label>Note</label>
-                            <textarea id="message" cols="30" rows="5" class="form-control"></textarea>
-                        </div>
+<!-- Checkout Start -->
+<div class="container-fluid pt-5">
+    <div class="row px-xl-5">
+        <div class="col-lg-8">
+            <div id="warningMessage" style="color: red; display: none;">
+                Please fill in all required fields.
+            </div>
+            <div class="mb-4">
+                <h4 class="font-weight-semi-bold mb-4">Recipient</h4>
+                <div class="row">
+                    <div class="col-md-12 form-group">
+                        <label>Name (*)</label>
+                        <input class="form-control" type="text" placeholder="BaoPC" name="name">
+                    </div>
+                    <div class="col-md-12 form-group">
+                        <label>Phone Number (*)</label>
+                        <input class="form-control" type="text" placeholder="+123 456 789" name="phone_number">
+                    </div>
+                    <div class="col-md-12 form-group">
+                        <label>Address (*)</label>
+                        <input class="form-control" type="text" placeholder="123 Street" name="address">
+                    </div>
+                    <div class="col-md-12 form-group">
+                        <label>Note</label>
+                        <textarea id="message" cols="30" rows="5" class="form-control" name="note"></textarea>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4">
-                <div class="card border-secondary mb-5">
-                    <div class="card-header bg-secondary border-0">
-                        <h4 class="font-weight-semi-bold m-0">Order Total</h4>
-                    </div>
-                    <div class="card-body">
-                        <h5 class="font-weight-medium mb-3">Products</h5>
-                        {% for item in request.session.cart %}
-                            <div class="d-flex justify-content-between">
-                                <p>{{ item.name }}, size {{item.size}} x {{item.quantity}}</p>
-                                <p>{{ item.price|floatformat:2|multiply:item.quantity }} đ</p>
-                            </div>
-                        {% endfor %}
-                        <hr class="mt-0">
+        </div>
+        <div class="col-lg-4">
+            <div class="card border-secondary mb-5">
+                <div class="card-header bg-secondary border-0">
+                    <h4 class="font-weight-semi-bold m-0">Order Total</h4>
+                </div>
+                <div class="card-body">
+                    <h5 class="font-weight-medium mb-3">Products</h5>
+                    {% for item in request.session.cart %}
                         <div class="d-flex justify-content-between">
-                            <h6 class="font-weight-medium">Shipping</h6>
-                            <h6 class="font-weight-medium">0 đ</h6>
+                            <p>{{ item.name }}, size {{item.size}} x {{item.quantity}}</p>
+                            <p>{{ item.price|floatformat:2|multiply:item.quantity }} VND</p>
                         </div>
-                    </div>
-                    <div class="card-footer border-secondary bg-transparent">
-                        <div class="d-flex justify-content-between mt-2">
-                            <h5 class="font-weight-bold">Total</h5>
-                            <h5 class="font-weight-bold">{{ request.session.cart|calculate_total }} đ</h5>
-                        </div>
+                    {% endfor %}
+                    <hr class="mt-0">
+                    <div class="d-flex justify-content-between">
+                        <h6 class="font-weight-medium">Shipping</h6>
+                        <h6 class="font-weight-medium">0 VND</h6>
                     </div>
                 </div>
-                <div class="card border-secondary mb-5">
-                    <div class="card-footer border-secondary bg-transparent">
-                        <button class="btn btn-lg btn-block btn-primary font-weight-bold my-3 py-3 place-order-button">Place Order</button>
+                <div class="card-footer border-secondary bg-transparent">
+                    <div class="d-flex justify-content-between mt-2">
+                        <h5 class="font-weight-bold">Total</h5>
+                        <h5 class="font-weight-bold">{{ request.session.cart|calculate_total }} VND</h5>
                     </div>
+                </div>
+            </div>
+            <div class="card border-secondary mb-5">
+                <div class="card-footer border-secondary bg-transparent">
+                    <button class="btn btn-lg btn-block btn-primary font-weight-bold my-3 py-3 place-order-button">Place Order</button>
                 </div>
             </div>
         </div>
     </div>
-    <!-- Checkout End -->
-    {% endblock content %}
+</div>
+<!-- Checkout End -->
+{% endblock content %}

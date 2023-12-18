@@ -17,11 +17,25 @@ from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ValidationError
 from django.http import JsonResponse
 from .models import Order
+from django.contrib.auth.models import User
+from django.db.models import Count, Min
 
 
 @csrf_exempt
 def index(request):
-    return render(request, 'index.html')
+    first_product_ids = Product.objects.values('category').annotate(first_product_id=Min('id')).values_list('first_product_id', flat=True)
+
+    categories_with_first_product = Product.objects.filter(id__in=first_product_ids)
+
+    categories_count = Product.objects.values('category').annotate(product_count=Count('id'))
+
+    categories = []
+    for category in categories_count:
+        category['first_product'] = next((prod for prod in categories_with_first_product if prod.category == category['category']), None)
+        categories.append(category)
+
+    top_products = Product.objects.all().order_by('-purchase_count')[:8]
+    return render(request, 'index.html', {'top_products': top_products, 'categories': categories})
 
 @csrf_exempt
 def cart(request):
@@ -68,8 +82,13 @@ def register(request):
 
 @csrf_exempt
 def shop(request):
-    all_products = Product.objects.all()
-    paginator = Paginator(all_products, 6)  
+    category_name = request.GET.get('category')
+    if category_name:
+        products = Product.objects.filter(category=category_name)
+    else:
+        products = Product.objects.all()
+
+    paginator = Paginator(products, 6)
     page = request.GET.get('page')
 
     try:
@@ -79,7 +98,7 @@ def shop(request):
     except EmptyPage:
         products = paginator.page(paginator.num_pages)
 
-    return render(request, 'shop.html', {'products': products})
+    return render(request, 'shop.html', {'products': products, 'category_name': category_name})
 
 @csrf_exempt
 def add_to_cart(request):
@@ -209,23 +228,70 @@ def remove_from_cart(request):
 @csrf_exempt
 def place_order(request):
     if request.method == 'POST':
-        data = json.loads(request.body)
-        name = data.get('name')
-        phone_number = data.get('phone_number')
-        address = data.get('address')
-        note = data.get('note')
-        order_details = data.get('order_details')
-        total = data.get('total')
+        try:
+            data = json.loads(request.body)
 
-        order = Order.objects.create(
-            name=name,
-            phone_number=phone_number,
-            address=address,
-            note=note,
-            order_details=order_details,
-            total=total
-        )
+            name = data.get('name')
+            phone_number = data.get('phone_number')
+            address = data.get('address')
+            note = data.get('note')
+            total = data.get('total')
 
-        return JsonResponse({'message': 'Order created successfully'})
+            order_details_json = data.get('order_details')
+            order_details_list = json.loads(order_details_json)
+
+            formatted_order_details = []
+            for item in order_details_list:
+                product = Product.objects.get(name=item['name'])
+
+                product.purchase_count += item['quantity']
+                product.save()
+
+                formatted_item = f"{item['name']}, size {item['size']} x {item['quantity']}"
+                formatted_order_details.append(formatted_item)
+
+            formatted_order_details_str = "\n".join(formatted_order_details)
+
+            user = request.user if request.user.is_authenticated else None
+
+            order = Order.objects.create(
+                user=user,
+                name=name,
+                phone_number=phone_number,
+                address=address,
+                note=note,
+                order_details=formatted_order_details_str,
+                total=total
+            )
+            
+            request.session['cart'] = []
+            request.session.modified = True
+
+            return JsonResponse({'message': 'Order created successfully'})
+
+        except json.JSONDecodeError:
+            return JsonResponse({'message': 'Invalid JSON'}, status=400)
+        except Product.DoesNotExist:
+            return JsonResponse({'message': 'Product not found'}, status=404)
+        except Exception as e:
+            return JsonResponse({'message': str(e)}, status=500)
 
     return JsonResponse({'message': 'Invalid request'}, status=400)
+
+@csrf_exempt
+def order_done(request):
+    return render(request, 'order_done.html')
+
+@csrf_exempt
+def profile_view(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+
+    orders = Order.objects.filter(user=request.user).order_by('-create_at')
+    
+    return render(request, 'profile.html', {'orders': orders})
+
+@csrf_exempt
+def product_categories(request):
+    categories = Product.objects.values_list('category', flat=True).distinct()
+    return JsonResponse(list(categories), safe=False)

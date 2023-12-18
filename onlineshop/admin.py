@@ -31,7 +31,7 @@ class EmailAddressAdmin(admin.ModelAdmin):
     
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['name', 'phone_number', 'address', 'total']
-    list_filter = ['name']
+    list_display = ['name', 'phone_number', 'address', 'total', 'create_at']
+    list_filter = ['name', 'phone_number', 'address', 'total', 'create_at']
     search_fields = ['name', 'phone_number', 'address']
 
