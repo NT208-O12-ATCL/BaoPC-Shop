@@ -119,7 +119,6 @@ def add_to_cart(request):
 
 @csrf_exempt
 def send_email_view(request, email_ids):
-    # Tách chuỗi thành danh sách các ID
     email_id_list = email_ids.split(',')
 
     if request.method == 'POST':
@@ -128,12 +127,10 @@ def send_email_view(request, email_ids):
             subject = form.cleaned_data['subject']
             message = form.cleaned_data['message']
 
-            # Lọc email dựa trên danh sách ID
             emails = EmailAddress.objects.filter(id__in=email_id_list).values_list('email', flat=True)
 
             send_mail(subject, message, 'từ@example.com', emails, fail_silently=False)
 
-            # Redirect sau khi gửi email
             return redirect('/admin/onlineshop/emailaddress/')
 
     else:
@@ -144,7 +141,7 @@ def send_email_view(request, email_ids):
 @csrf_exempt
 def search_products(request):
     query = request.GET.get('q', '')
-    products = Product.objects.filter(name__icontains=query)[:5]  # Lấy 5 sản phẩm phù hợp đầu tiên
+    products = Product.objects.filter(name__icontains=query)[:5]
     results = [{'name': product.name, 'price': product.price, 'image': product.image.url, 'url': reverse('product_detail', args=[product.id])} for product in products]
     return JsonResponse(results, safe=False)
 
@@ -162,7 +159,7 @@ def subscribe(request):
         except EmailAddress.DoesNotExist:
             try:
                 email_obj = EmailAddress(email=email)
-                email_obj.full_clean()  # Perform model validation
+                email_obj.full_clean()
                 email_obj.save()
                 return JsonResponse({"message": "Email subscribed successfully."})
             except ValidationError as e:
@@ -220,7 +217,6 @@ def place_order(request):
         order_details = data.get('order_details')
         total = data.get('total')
 
-        # Tạo đơn hàng
         order = Order.objects.create(
             name=name,
             phone_number=phone_number,

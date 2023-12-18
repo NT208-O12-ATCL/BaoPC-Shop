@@ -499,14 +499,12 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Function to calculate the subtotal
             function calculateSubtotal() {
                 var totalElements = document.getElementsByClassName('total');
                 var subtotal = 0;
                 for(var i = 0; i < totalElements.length; i++) {
                     subtotal += parseFloat(totalElements[i].innerText);
                 }
-                // Update the subtotal in the cart summary
                 var subtotalElement = document.querySelector('.subtotal');
                 var total_cart = document.querySelector('.total-cart');
                 if (subtotalElement) {
@@ -565,7 +563,6 @@
                 const note = document.querySelector('textarea[name="note"]').value;
                 const products = JSON.parse('{{ request.session.cart|escapejs }}');
         
-                // Tạo một đối tượng chứa thông tin đơn hàng
                 const order = {
                     name: name,
                     phone_number: phoneNumber,
@@ -575,7 +572,6 @@
                     total: '{{ request.session.cart|calculate_total }}'
                 };
         
-                // Sử dụng fetch để gửi đối tượng đơn hàng đến view Django
                 fetch('/place_order/', {
                     method: 'POST',
                     headers: {
@@ -585,7 +581,6 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                    // Xử lý kết quả từ server nếu cần
                     console.log(data);
                 })
                 .catch(error => {
