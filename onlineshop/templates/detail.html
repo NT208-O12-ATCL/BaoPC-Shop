@@ -1,166 +1,166 @@
-    {% extends 'base.html' %}
-    {% load static %}
+{% extends 'base.html' %}
+{% load static %}
 
-    {% block content %}
-    <!-- Page Header Start -->
-    <div class="container-fluid bg-secondary mb-5">
-        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
-            <h1 class="font-weight-semi-bold text-uppercase mb-3">Shop Detail</h1>
-            <div class="d-inline-flex">
-                <p class="m-0"><a href="/index">Home</a></p>
-                <p class="m-0 px-2">-</p>
-                <p class="m-0">Shop Detail</p>
+{% block content %}
+<!-- Page Header Start -->
+<div class="container-fluid bg-secondary mb-5">
+    <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+        <h1 class="font-weight-semi-bold text-uppercase mb-3">Shop Detail</h1>
+        <div class="d-inline-flex">
+            <p class="m-0"><a href="/index">Home</a></p>
+            <p class="m-0 px-2">-</p>
+            <p class="m-0">Shop Detail</p>
+        </div>
+    </div>
+</div>
+<!-- Page Header End -->
+
+
+<!-- Shop Detail Start -->
+<div class="container-fluid py-5">
+    <div class="row px-xl-5">
+        <div class="col-lg-5 pb-5">
+            <div class="carousel-inner border">
+                <div class="carousel-item active">
+                    <img class="img-fluid w-100"src="{{product.image.url}}" alt="Image">
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-7 pb-5">
+            <h3 class="font-weight-semi-bold product-name">{{product.name}}</h3>
+            <div class="d-flex mb-3">
+            </div>
+            <h3 class="font-weight-semi-bold mb-4">{{product.price}} VND</h3>
+            <p class="mb-4">{{product.description}}</p>
+            <div class="d-flex mb-3">
+                <p class="text-dark font-weight-medium mb-0 mr-3">Sizes:</p>
+                <form>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" class="custom-control-input" id="size-1" name="size" value="XS">
+                        <label class="custom-control-label" for="size-1">XS</label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" class="custom-control-input" id="size-2" name="size" value="S">
+                        <label class="custom-control-label" for="size-2">S</label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" class="custom-control-input" id="size-3" name="size" value="M">
+                        <label class="custom-control-label" for="size-3">M</label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" class="custom-control-input" id="size-4" name="size" value="L">
+                        <label class="custom-control-label" for="size-4">L</label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline">
+                        <input type="radio" class="custom-control-input" id="size-5" name="size" value="XL">
+                        <label class="custom-control-label" for="size-5">XL</label>
+                    </div>
+                </form>
+            </div>
+            <div class="d-flex align-items-center mb-4 pt-2">
+                <div class="input-group quantity mr-3" style="width: 130px;">
+                    <div class="input-group-btn">
+                        <button class="btn btn-primary btn-minus" >
+                        <i class="fa fa-minus"></i>
+                        </button>
+                    </div>
+                    <input type="text" class="form-control bg-secondary text-center" value="1">
+                    <div class="input-group-btn">
+                        <button class="btn btn-primary btn-plus">
+                            <i class="fa fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+                <button id="addToCartBtn" class="btn btn-primary px-3">
+                    <i class="fa fa-shopping-cart mr-1"></i> Add To Cart
+                </button>
+            </div>
+            <div class="d-flex pt-2">
+                <p class="text-dark font-weight-medium mb-0 mr-2">Share on:</p>
+                <div class="d-inline-flex">
+                    <a class="text-dark px-2" href="#" onclick="shareOnFacebook()">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                </div>
             </div>
         </div>
     </div>
-    <!-- Page Header End -->
-
-
-    <!-- Shop Detail Start -->
-    <div class="container-fluid py-5">
-        <div class="row px-xl-5">
-            <div class="col-lg-5 pb-5">
-                <div class="carousel-inner border">
-                    <div class="carousel-item active">
-                        <img class="img-fluid w-100"src="{{product.image.url}}" alt="Image">
+    <div class="row px-xl-5">
+        <div class="col">
+            <div class="nav nav-tabs justify-content-center border-secondary mb-4">
+                <a class="nav-item nav-link active" data-toggle="tab" href="#tab-pane-1">Description</a>
+                <a class="nav-item nav-link" data-toggle="tab" href="#tab-pane-2">Reviews</a>
+            </div>
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="tab-pane-1">
+                    <h4 class="mb-3">Product Description</h4>
+                    <p>Eos no lorem eirmod diam diam, eos elitr et gubergren diam sea. Consetetur vero aliquyam invidunt duo dolores et duo sit. Vero diam ea vero et dolore rebum, dolor rebum eirmod consetetur invidunt sed sed et, lorem duo et eos elitr, sadipscing kasd ipsum rebum diam. Dolore diam stet rebum sed tempor kasd eirmod. Takimata kasd ipsum accusam sadipscing, eos dolores sit no ut diam consetetur duo justo est, sit sanctus diam tempor aliquyam eirmod nonumy rebum dolor accusam, ipsum kasd eos consetetur at sit rebum, diam kasd invidunt tempor lorem, ipsum lorem elitr sanctus eirmod takimata dolor ea invidunt.</p>
+                    <p>Dolore magna est eirmod sanctus dolor, amet diam et eirmod et ipsum. Amet dolore tempor consetetur sed lorem dolor sit lorem tempor. Gubergren amet amet labore sadipscing clita clita diam clita. Sea amet et sed ipsum lorem elitr et, amet et labore voluptua sit rebum. Ea erat sed et diam takimata sed justo. Magna takimata justo et amet magna et.</p>
+                </div>
+                <div class="tab-pane fade" id="tab-pane-2">
+                    <div class="row">
+                        <div class="col-md-6 review-container">
+                            {% for review in reviews %}
+                                <div class="media mb-4">
+                                    <div class="media-body">
+                                        <h6>{{ review.name }}<small> - <i>{{ review.created_at|date:"d M Y" }}</i></small></h6>
+                                        <p>{{ review.review_text }}</p>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="col-md-6">
+                            <h4 class="mb-4">Leave a review</h4>
+                            <div class="form-group">
+                                <label for="name">Your Name *</label>
+                                <input type="text" class="form-control" id="name" name="name">
+                            </div>
+                            <div class="form-group">
+                                <label for="message">Your Review *</label>
+                                <textarea id="message" cols="30" rows="5" class="form-control" name="review-text"></textarea>
+                            </div>
+                            <div class="form-group mb-0">
+                                <button class="btn btn-primary px-3 submit-review-button">Submit Review</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+<!-- Shop Detail End -->
 
-            <div class="col-lg-7 pb-5">
-                <h3 class="font-weight-semi-bold product-name">{{product.name}}</h3>
-                <div class="d-flex mb-3">
-                </div>
-                <h3 class="font-weight-semi-bold mb-4">{{product.price}} VND</h3>
-                <p class="mb-4">{{product.description}}</p>
-                <div class="d-flex mb-3">
-                    <p class="text-dark font-weight-medium mb-0 mr-3">Sizes:</p>
-                    <form>
-                        <div class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" class="custom-control-input" id="size-1" name="size" value="XS">
-                            <label class="custom-control-label" for="size-1">XS</label>
-                        </div>
-                        <div class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" class="custom-control-input" id="size-2" name="size" value="S">
-                            <label class="custom-control-label" for="size-2">S</label>
-                        </div>
-                        <div class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" class="custom-control-input" id="size-3" name="size" value="M">
-                            <label class="custom-control-label" for="size-3">M</label>
-                        </div>
-                        <div class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" class="custom-control-input" id="size-4" name="size" value="L">
-                            <label class="custom-control-label" for="size-4">L</label>
-                        </div>
-                        <div class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" class="custom-control-input" id="size-5" name="size" value="XL">
-                            <label class="custom-control-label" for="size-5">XL</label>
-                        </div>
-                    </form>
-                </div>
-                <div class="d-flex align-items-center mb-4 pt-2">
-                    <div class="input-group quantity mr-3" style="width: 130px;">
-                        <div class="input-group-btn">
-                            <button class="btn btn-primary btn-minus" >
-                            <i class="fa fa-minus"></i>
-                            </button>
-                        </div>
-                        <input type="text" class="form-control bg-secondary text-center" value="1">
-                        <div class="input-group-btn">
-                            <button class="btn btn-primary btn-plus">
-                                <i class="fa fa-plus"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <button id="addToCartBtn" class="btn btn-primary px-3">
-                        <i class="fa fa-shopping-cart mr-1"></i> Add To Cart
-                    </button>
-                </div>
-                <div class="d-flex pt-2">
-                    <p class="text-dark font-weight-medium mb-0 mr-2">Share on:</p>
-                    <div class="d-inline-flex">
-                        <a class="text-dark px-2" href="#" onclick="shareOnFacebook()">
-                            <i class="fab fa-facebook-f"></i>
+
+<!-- Products Start -->
+<div class="container-fluid py-5">
+    <div class="text-center mb-4">
+        <h2 class="section-title px-5"><span class="px-2">You May Also Like</span></h2>
+    </div>
+    <div class="row px-xl-5">
+        <div class="col">
+            <div class="owl-carousel related-carousel">
+                {% for product in products %}
+                <div class="card product-item border-0">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        <a href="{% url 'product_detail' product.id %}"><img class="img-fluid w-100" style="width: 600px" alt="">
+                            <img class="img-fluid w-100" style="width: 600px" src="{{product.image.url}}" alt="">
                         </a>
                     </div>
-                </div>
-            </div>
-        </div>
-        <div class="row px-xl-5">
-            <div class="col">
-                <div class="nav nav-tabs justify-content-center border-secondary mb-4">
-                    <a class="nav-item nav-link active" data-toggle="tab" href="#tab-pane-1">Description</a>
-                    <a class="nav-item nav-link" data-toggle="tab" href="#tab-pane-2">Reviews</a>
-                </div>
-                <div class="tab-content">
-                    <div class="tab-pane fade show active" id="tab-pane-1">
-                        <h4 class="mb-3">Product Description</h4>
-                        <p>Eos no lorem eirmod diam diam, eos elitr et gubergren diam sea. Consetetur vero aliquyam invidunt duo dolores et duo sit. Vero diam ea vero et dolore rebum, dolor rebum eirmod consetetur invidunt sed sed et, lorem duo et eos elitr, sadipscing kasd ipsum rebum diam. Dolore diam stet rebum sed tempor kasd eirmod. Takimata kasd ipsum accusam sadipscing, eos dolores sit no ut diam consetetur duo justo est, sit sanctus diam tempor aliquyam eirmod nonumy rebum dolor accusam, ipsum kasd eos consetetur at sit rebum, diam kasd invidunt tempor lorem, ipsum lorem elitr sanctus eirmod takimata dolor ea invidunt.</p>
-                        <p>Dolore magna est eirmod sanctus dolor, amet diam et eirmod et ipsum. Amet dolore tempor consetetur sed lorem dolor sit lorem tempor. Gubergren amet amet labore sadipscing clita clita diam clita. Sea amet et sed ipsum lorem elitr et, amet et labore voluptua sit rebum. Ea erat sed et diam takimata sed justo. Magna takimata justo et amet magna et.</p>
-                    </div>
-                    <div class="tab-pane fade" id="tab-pane-2">
-                        <div class="row">
-                            <div class="col-md-6 review-container">
-                                {% for review in reviews %}
-                                    <div class="media mb-4">
-                                        <div class="media-body">
-                                            <h6>{{ review.name }}<small> - <i>{{ review.created_at|date:"d M Y" }}</i></small></h6>
-                                            <p>{{ review.review_text }}</p>
-                                        </div>
-                                    </div>
-                                {% endfor %}
-                            </div>
-                            <div class="col-md-6">
-                                <h4 class="mb-4">Leave a review</h4>
-                                <div class="form-group">
-                                    <label for="name">Your Name *</label>
-                                    <input type="text" class="form-control" id="name" name="name">
-                                </div>
-                                <div class="form-group">
-                                    <label for="message">Your Review *</label>
-                                    <textarea id="message" cols="30" rows="5" class="form-control" name="review-text"></textarea>
-                                </div>
-                                <div class="form-group mb-0">
-                                    <button class="btn btn-primary px-3 submit-review-button">Submit Review</button>
-                                </div>
-                            </div>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3">{{product.name}}</h6>
+                        <div class="d-flex justify-content-center">
+                                <h6>{{product.price}} VND</h6>
                         </div>
                     </div>
                 </div>
+                {% endfor %}
             </div>
         </div>
     </div>
-    <!-- Shop Detail End -->
+</div>
+<!-- Products End -->
 
-
-    <!-- Products Start -->
-    <div class="container-fluid py-5">
-        <div class="text-center mb-4">
-            <h2 class="section-title px-5"><span class="px-2">You May Also Like</span></h2>
-        </div>
-        <div class="row px-xl-5">
-            <div class="col">
-                <div class="owl-carousel related-carousel">
-                    {% for product in products %}
-                    <div class="card product-item border-0">
-                        <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-                            <a href="{% url 'product_detail' product.id %}"><img class="img-fluid w-100" style="width: 600px" alt="">
-                                <img class="img-fluid w-100" style="width: 600px" src="{{product.image.url}}" alt="">
-                            </a>
-                        </div>
-                        <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                            <h6 class="text-truncate mb-3">{{product.name}}</h6>
-                            <div class="d-flex justify-content-center">
-                                    <h6>{{product.price}} VND</h6>
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Products End -->
-
-    {% endblock content %}
+{% endblock content %}
 
