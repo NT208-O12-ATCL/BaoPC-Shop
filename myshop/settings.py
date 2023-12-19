@@ -48,7 +48,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'onlineshop',
     'django_htmx',
-    'django_social_share',
     'corsheaders',
 ]
 
