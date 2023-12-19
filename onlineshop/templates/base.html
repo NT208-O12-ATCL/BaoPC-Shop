@@ -37,6 +37,15 @@
         }
     </style>
 
+    <style>
+        .review-container {
+            height: 400px;
+            overflow-y: scroll;
+            scrollbar-width: thin;
+            scrollbar-color: blue gray;
+        }
+    </style>
+
 </head>
 
 <body>
@@ -72,7 +81,7 @@
         <div class="row align-items-center py-3 px-xl-5">
             <div class="col-lg-3 d-none d-lg-block">
                 <a href="/index/" class="text-decoration-none">
-                    <h1 class="m-0 display-5 font-weight-semi-bold"><span class="text-primary font-weight-bold border px-3 mr-1">Bao</span>PC</h1>
+                    <h1 class="m-0 display-5 font-weight-semi-bold"><span class="text-primary font-weight-bold border px-3 mr-1">G</span>10</h1>
                 </a>
             </div>
             <div class="col-lg-6 col-6 text-left">
@@ -120,7 +129,7 @@
             <div class="col-lg-9">
                 <nav class="navbar navbar-expand-lg bg-light navbar-light py-3 py-lg-0 px-0">
                     <a href="" class="text-decoration-none d-block d-lg-none">
-                        <h1 class="m-0 display-5 font-weight-semi-bold"><span class="text-primary font-weight-bold border px-3 mr-1">E</span>Shopper</h1>
+                        <h1 class="m-0 display-5 font-weight-semi-bold"><span class="text-primary font-weight-bold border px-3 mr-1">G</span>10</h1>
                     </a>
                     <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
                         <span class="navbar-toggler-icon"></span>
@@ -170,7 +179,7 @@
         <div class="row px-xl-5 pt-5">
             <div class="col-lg-9 col-md-12 mb-5 pr-3 pr-xl-5">
                 <a href="" class="text-decoration-none">
-                    <h1 class="mb-4 display-5 font-weight-semi-bold"><span class="text-primary font-weight-bold border border-white px-3 mr-1">Bao</span>PC</h1>
+                    <h1 class="mb-4 display-5 font-weight-semi-bold"><span class="text-primary font-weight-bold border border-white px-3 mr-1">G</span>10</h1>
                 </a>
                 <p class="mb-2"><i class="fa fa-map-marker-alt text-primary mr-3"></i>Bcons GreenView, Đông hòa, Dĩ An, Bình Dương</p>
                 <p class="mb-2"><i class="fa fa-envelope text-primary mr-3"></i>truongbao69991@gmail.com</p>
@@ -220,7 +229,7 @@
 
     <!-- Template Javascript -->
     <script src='{% static "js/main.js" %}'></script>
-
+    
     <script>
         var spanElement = document.querySelector('.badge');
 
@@ -573,6 +582,27 @@
                         });
                     })
                     .catch(error => console.error('Error:', error));
+            });
+        </script>
+
+        <script>
+            document.querySelector('.submit-review-button').addEventListener('click', function() {
+                event.preventDefault();
+                
+                var name = document.getElementById('name').value;
+                var reviewText = document.getElementById('message').value;
+                var productId = {{ product.id }};
+        
+                fetch('/api/add-review/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ name: name, review_text: reviewText, product_id: productId })
+                })
+                .then(response => response.json())
+                .then(data => {
+                });
             });
         </script>
         

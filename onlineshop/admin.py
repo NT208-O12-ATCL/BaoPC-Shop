@@ -4,6 +4,7 @@ from .models import EmailAddress
 from django.urls import reverse
 from django.http import HttpResponseRedirect
 from .models import Order
+from .models import Review
 
 admin.site.site_header = "BaoPC Shop"
 admin.site.site_title = "BaoPC Shop"
@@ -34,4 +35,11 @@ class OrderAdmin(admin.ModelAdmin):
     list_display = ['name', 'phone_number', 'address', 'total', 'create_at']
     list_filter = ['name', 'phone_number', 'address', 'total', 'create_at']
     search_fields = ['name', 'phone_number', 'address']
+    
+@admin.register(Review)
+class ReviewAdmin(admin.ModelAdmin):
+    list_display = ['name', 'review_text', 'created_at']
+    list_filter = ['name']
+    search_fields = ['name']
+
 

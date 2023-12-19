@@ -19,6 +19,7 @@ from django.http import JsonResponse
 from .models import Order
 from django.contrib.auth.models import User
 from django.db.models import Count, Min
+from .models import Review
 
 
 @csrf_exempt
@@ -54,7 +55,8 @@ def contact(request):
 def detail(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     products = Product.objects.all()
-    return render(request, 'detail.html', {'product': product, 'products': products})
+    reviews = Review.objects.filter(product=product).order_by('-created_at')
+    return render(request, 'detail.html', {'product': product, 'reviews': reviews, 'products': products})
 
 @csrf_exempt
 def login_form(request):
@@ -295,3 +297,18 @@ def profile_view(request):
 def product_categories(request):
     categories = Product.objects.values_list('category', flat=True).distinct()
     return JsonResponse(list(categories), safe=False)
+
+@csrf_exempt
+def add_review(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        product_id = data['product_id']
+        name = data['name']
+        review_text = data['review_text']
+
+        product = get_object_or_404(Product, id=product_id)
+        Review.objects.create(product=product, name=name, review_text=review_text)
+
+        return JsonResponse({"message": "Review added successfully"})
+
+    return JsonResponse({"message": "Invalid request"}, status=400)
