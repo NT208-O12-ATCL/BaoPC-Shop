@@ -1,56 +1,55 @@
-from django.shortcuts import render,get_object_or_404,redirect
-from django.http import HttpResponse
-from django.http import HttpResponseRedirect
-from .forms import RegistrationForm
-from .forms import LoginForm
+from django.shortcuts import render, get_object_or_404, redirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from .forms import RegistrationForm, LoginForm, EmailForm
 from django.contrib.auth import authenticate, login
-from .models import Product
+from .models import Product, EmailAddress, Order, Review
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.http import JsonResponse
-import json
-from .forms import EmailForm
-from .models import EmailAddress
 from django.core.mail import send_mail
-from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ValidationError
-from django.http import JsonResponse
-from .models import Order
 from django.contrib.auth.models import User
 from django.db.models import Count, Min
-from .models import Review
 
-
+# Hàm xử lý trang chủ
 @csrf_exempt
 def index(request):
+    # Lấy ID của sản phẩm đầu tiên trong mỗi danh mục
     first_product_ids = Product.objects.values('category').annotate(first_product_id=Min('id')).values_list('first_product_id', flat=True)
 
+    # Lấy các sản phẩm đầu tiên trong mỗi danh mục
     categories_with_first_product = Product.objects.filter(id__in=first_product_ids)
 
+    # Đếm số lượng sản phẩm trong mỗi danh mục
     categories_count = Product.objects.values('category').annotate(product_count=Count('id'))
 
+    # Tạo danh sách danh mục với thông tin sản phẩm đầu tiên và số lượng sản phẩm
     categories = []
     for category in categories_count:
         category['first_product'] = next((prod for prod in categories_with_first_product if prod.category == category['category']), None)
         categories.append(category)
 
+    # Lấy 8 sản phẩm có số lượng mua nhiều nhất
     top_products = Product.objects.all().order_by('-purchase_count')[:8]
     return render(request, 'index.html', {'top_products': top_products, 'categories': categories})
 
+# Hàm xử lý trang giỏ hàng
 @csrf_exempt
 def cart(request):
     cart = request.session.get('cart', [])
     return render(request, 'cart.html', {'cart': cart})
 
+# Hàm xử lý trang thanh toán
 @csrf_exempt
 def checkout(request):
     return render(request, 'checkout.html')
 
+# Hàm xử lý trang liên hệ
 @csrf_exempt
 def contact(request):
     return render(request, 'contact.html')
 
+# Hàm xử lý trang chi tiết sản phẩm
 @csrf_exempt
 def detail(request, product_id):
     product = get_object_or_404(Product, id=product_id)
@@ -58,6 +57,7 @@ def detail(request, product_id):
     reviews = Review.objects.filter(product=product).order_by('-created_at')
     return render(request, 'detail.html', {'product': product, 'reviews': reviews, 'products': products})
 
+# Hàm xử lý form đăng nhập
 @csrf_exempt
 def login_form(request):
     form = LoginForm()
@@ -72,6 +72,7 @@ def login_form(request):
                 return HttpResponseRedirect('/index')
     return render(request, 'login.html', {'form': form})
 
+# Hàm xử lý form đăng ký
 @csrf_exempt
 def register(request):
     form = RegistrationForm()
@@ -82,6 +83,7 @@ def register(request):
             return HttpResponseRedirect('/login')
     return render(request, 'register.html', {'form': form})
 
+# Hàm xử lý trang cửa hàng
 @csrf_exempt
 def shop(request):
     category_name = request.GET.get('category')
@@ -102,6 +104,7 @@ def shop(request):
 
     return render(request, 'shop.html', {'products': products, 'category_name': category_name})
 
+# Hàm xử lý thêm sản phẩm vào giỏ hàng
 @csrf_exempt
 def add_to_cart(request):
     if request.method == 'POST':
@@ -113,12 +116,12 @@ def add_to_cart(request):
             'size': data.get('size'),
             'quantity': int(data.get('quantity', 1))
         }
-        
+
         cart = request.session.get('cart')
 
         if cart is None or not isinstance(cart, list):
             cart = []
-            
+
         found = False
         for item in cart:
             if item['name'] == product_info['name'] and item['size'] == product_info['size']:
@@ -128,16 +131,16 @@ def add_to_cart(request):
 
         if not found:
             cart.append(product_info)
-        print(cart)
-        
+
         request.session['cart'] = cart
-        
+
         total_quantity = sum(item['quantity'] for item in cart)
-    
-        return JsonResponse({'status': 'success', 'total_quantity': total_quantity })
+
+        return JsonResponse({'status': 'success', 'total_quantity': total_quantity})
     else:
         return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
 
+# Hàm xử lý gửi email
 @csrf_exempt
 def send_email_view(request, email_ids):
     email_id_list = email_ids.split(',')
@@ -159,6 +162,7 @@ def send_email_view(request, email_ids):
 
     return render(request, 'send_email.html', {'form': form})
 
+# Hàm xử lý tìm kiếm sản phẩm
 @csrf_exempt
 def search_products(request):
     query = request.GET.get('q', '')
@@ -166,14 +170,15 @@ def search_products(request):
     results = [{'name': product.name, 'price': product.price, 'image': product.image.url, 'url': reverse('product_detail', args=[product.id])} for product in products]
     return JsonResponse(results, safe=False)
 
+# Hàm xử lý đăng ký nhận thông báo
 @csrf_exempt
 def subscribe(request):
     if request.method == "POST":
         email = request.POST.get("email")
-        
+
         if not email:
             return JsonResponse({"message": "Email field is empty."}, status=400)
-        
+
         try:
             EmailAddress.objects.get(email=email)
             return JsonResponse({"message": "Email already subscribed."}, status=400)
@@ -185,15 +190,16 @@ def subscribe(request):
                 return JsonResponse({"message": "Email subscribed successfully."})
             except ValidationError as e:
                 return JsonResponse({"message": e.message}, status=400)
-          
-@csrf_exempt  
+
+# Hàm xử lý gửi tin nhắn từ trang liên hệ
+@csrf_exempt
 def send_message(request):
     if request.method == 'POST':
         name = request.POST.get('name')
         email = request.POST.get('email')
         subject = request.POST.get('subject')
         message = request.POST.get('message')
-        
+
         email_content = f"Name: {name}\nEmail: {email}\nMessage: {message}"
 
         try:
@@ -210,6 +216,7 @@ def send_message(request):
 
     return JsonResponse({'message': 'Invalid request method.'}, status=400)
 
+# Hàm xử lý xóa sản phẩm khỏi giỏ hàng
 @csrf_exempt
 def remove_from_cart(request):
     if request.method == 'POST':
@@ -226,7 +233,8 @@ def remove_from_cart(request):
         return JsonResponse({'status': 'success'})
     else:
         return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
-    
+
+# Hàm xử lý đặt hàng
 @csrf_exempt
 def place_order(request):
     if request.method == 'POST':
@@ -265,7 +273,7 @@ def place_order(request):
                 order_details=formatted_order_details_str,
                 total=total
             )
-            
+
             request.session['cart'] = []
             request.session.modified = True
 
@@ -280,24 +288,28 @@ def place_order(request):
 
     return JsonResponse({'message': 'Invalid request'}, status=400)
 
+# Hàm xử lý trang xác nhận đặt hàng thành công
 @csrf_exempt
 def order_done(request):
     return render(request, 'order_done.html')
 
+# Hàm xử lý trang thông tin cá nhân người dùng
 @csrf_exempt
 def profile_view(request):
     if not request.user.is_authenticated:
         return redirect('login')
 
     orders = Order.objects.filter(user=request.user).order_by('-create_at')
-    
+
     return render(request, 'profile.html', {'orders': orders})
 
+# Hàm lấy danh sách các danh mục sản phẩm
 @csrf_exempt
 def product_categories(request):
     categories = Product.objects.values_list('category', flat=True).distinct()
     return JsonResponse(list(categories), safe=False)
 
+# Hàm xử lý thêm đánh giá sản phẩm
 @csrf_exempt
 def add_review(request):
     if request.method == 'POST':
